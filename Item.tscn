@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cf7jwmqbppjjp"]
+
+[ext_resource type="Script" path="res://Item.gd" id="1_2wieh"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5p7uk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ldagi"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kwo48"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5q7od"]
+size = Vector3(0.3, 0.2, 0.3)
+
+[node name="RigidBody3D" type="RigidBody3D" groups=["Item", "interactable"]]
+physics_material_override = SubResource("PhysicsMaterial_5p7uk")
+script = ExtResource("1_2wieh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ldagi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_kwo48")
+skeleton = NodePath("../Item")
+
+[node name="Item" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Item"]
+shape = SubResource("BoxShape3D_5q7od")

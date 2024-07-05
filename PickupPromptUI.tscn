@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu8hku61s0e8i"]
+
+[ext_resource type="Script" path="res://PickupPromptUI.gd" id="1_yixgm"]
+[ext_resource type="Theme" uid="uid://b7erl70yt47d" path="res://UI-Theme.tres" id="2_hfe3q"]
+
+[node name="PickupPromptUI" type="CanvasLayer"]
+script = ExtResource("1_yixgm")
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 12.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_hfe3q")
+horizontal_alignment = 1
+vertical_alignment = 1

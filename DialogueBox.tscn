@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3ki4y0avaf2p"]
+
+[ext_resource type="Script" path="res://DialogueBox.gd" id="1_c64ak"]
+[ext_resource type="Theme" uid="uid://b7erl70yt47d" path="res://UI-Theme.tres" id="2_ythcg"]
+
+[node name="DialogueBox" type="Control"]
+layout_mode = 3
+anchor_top = 0.785
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = 0.199951
+offset_right = -6.0
+offset_bottom = 3.0
+script = ExtResource("1_c64ak")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.997
+anchor_bottom = 0.953
+offset_right = 0.753906
+offset_bottom = 0.0449829
+theme = ExtResource("2_ythcg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

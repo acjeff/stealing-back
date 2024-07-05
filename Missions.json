@@ -1,0 +1,37 @@
+[
+	{
+		"id": 1,
+		"name": "Retrieve Stolen Necklace",
+		"description": "Find and return the stolen necklace to the jeweler.",
+		"item_id": 101,
+		"npc_id": 201
+	},
+	{
+		"id": 2,
+		"name": "Deliver Secret Document",
+		"description": "Deliver the secret document to the agent at the safe house.",
+		"item_id": 102,
+		"npc_id": 202
+	},
+	{
+		"id": 3,
+		"name": "Rescue the Cat",
+		"description": "Find and rescue the cat stuck in the old warehouse and bring it back to its owner.",
+		"item_id": 103,
+		"npc_id": 203
+	},
+	{
+		"id": 4,
+		"name": "Collect Rare Herb",
+		"description": "Collect the rare herb from the forest and deliver it to the herbalist.",
+		"item_id": 104,
+		"npc_id": 204
+	},
+	{
+		"id": 5,
+		"name": "Recover Lost Ring",
+		"description": "Find the lost ring in the park and return it to the owner.",
+		"item_id": 105,
+		"npc_id": 205
+	}
+]

@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://cnqpcqmsqouvh"]
+
+[ext_resource type="Material" uid="uid://dvf5xnou45awy" path="res://lamp.tres" id="1_btwiw"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_g5urn"]
+material = ExtResource("1_btwiw")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_i251c"]
+material = ExtResource("1_btwiw")
+top_radius = 0.2
+bottom_radius = 0.3
+height = 5.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_a7sfm"]
+height = 5.0
+radius = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_t0uwf"]
+material = ExtResource("1_btwiw")
+top_radius = 0.7
+bottom_radius = 0.7
+height = 0.1
+
+[node name="Lamp" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.02081, 0)
+mesh = SubResource("TorusMesh_g5urn")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55859, 0)
+mesh = SubResource("CylinderMesh_i251c")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9928, 0)
+light_color = Color(0.890152, 0.962436, 0.853779, 1)
+light_energy = 5.5
+shadow_enabled = true
+omni_range = 8.833
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.56284, 0)
+shape = SubResource("CylinderShape3D_a7sfm")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1557, 0)
+mesh = SubResource("CylinderMesh_t0uwf")

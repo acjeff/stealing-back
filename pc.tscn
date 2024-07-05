@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4ogqvs2en2ds"]
+
+[ext_resource type="Script" path="res://PC.gd" id="1_3jm5s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b5ak3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_wxyyv"]
+
+[node name="PC" type="StaticBody3D" groups=["interactable"]]
+script = ExtResource("1_3jm5s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_b5ak3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_wxyyv")

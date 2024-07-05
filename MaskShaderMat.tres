@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dl6008f167p68"]
+
+[ext_resource type="Shader" path="res://MaskShader.gdshader" id="1_1s5ae"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1s5ae")
+shader_parameter/player_position = null
+shader_parameter/mask_radius = 5.0
+shader_parameter/mask_color = Vector4(1, 0, 0, 1)

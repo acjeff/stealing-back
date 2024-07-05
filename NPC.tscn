@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bys3tvwvyhvo6"]
+
+[ext_resource type="Script" path="res://NPC.gd" id="1_p0yfx"]
+[ext_resource type="PackedScene" uid="uid://cscnp2kc77bru" path="res://person.tscn" id="2_1r456"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5tfjk"]
+radius = 0.522
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aqvd5"]
+size = Vector3(4, 4, 4)
+
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["NPCs"]]
+script = ExtResource("1_p0yfx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_5tfjk")
+
+[node name="Person" parent="CollisionShape3D" instance=ExtResource("2_1r456")]
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_aqvd5")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="NPC" type="Node3D" parent="." groups=["NPCs"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+visible = false

@@ -1,0 +1,385 @@
+[gd_scene load_steps=27 format=3 uid="uid://dlf0h0uddaa50"]
+
+[ext_resource type="PackedScene" uid="uid://b3oq2bproach" path="res://Ground.tscn" id="1_4qwfp"]
+[ext_resource type="Script" path="res://Main.gd" id="1_l2ko3"]
+[ext_resource type="Environment" uid="uid://djc2tfxaclpnw" path="res://Main.tres" id="1_lxhjq"]
+[ext_resource type="PackedScene" uid="uid://c23j8wlafajl1" path="res://Player.tscn" id="2_w8oro"]
+[ext_resource type="PackedScene" uid="uid://cf7jwmqbppjjp" path="res://Item.tscn" id="3_66udm"]
+[ext_resource type="PackedScene" uid="uid://chh3dpqqco5fc" path="res://LargeItem.tscn" id="4_hj7ko"]
+[ext_resource type="PackedScene" uid="uid://y0culrqkp5o5" path="res://InventoryUI.tscn" id="5_thrj7"]
+[ext_resource type="PackedScene" uid="uid://bu8hku61s0e8i" path="res://PickupPromptUI.tscn" id="6_7yc5l"]
+[ext_resource type="Script" path="res://Camera3D.gd" id="7_hun0x"]
+[ext_resource type="PackedScene" uid="uid://bys3tvwvyhvo6" path="res://NPC.tscn" id="8_sjtqr"]
+[ext_resource type="Material" uid="uid://dmbtgfx1ypk8f" path="res://transparent_material.tres" id="8_vpk5c"]
+[ext_resource type="PackedScene" uid="uid://b3ki4y0avaf2p" path="res://DialogueBox.tscn" id="9_u6f7j"]
+[ext_resource type="PackedScene" uid="uid://dfgpwypsfh05n" path="res://shop.tscn" id="11_c6y3w"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="11_qoqhk"]
+[ext_resource type="PackedScene" uid="uid://cnqpcqmsqouvh" path="res://lamp.tscn" id="13_a3v5k"]
+[ext_resource type="Script" path="res://NPCManager.gd" id="14_dhql6"]
+[ext_resource type="Script" path="res://MissionUI.gd" id="16_oaa3n"]
+[ext_resource type="Theme" uid="uid://b7erl70yt47d" path="res://UI-Theme.tres" id="17_h4vm3"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_aqc10"]
+agent_max_slope = 60.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lnqht"]
+render_priority = 0
+shader = ExtResource("11_qoqhk")
+shader_parameter/depth_threshold = 0.05
+shader_parameter/reverse_depth_threshold = 0.25
+shader_parameter/normal_threshold = 0.6
+shader_parameter/darken_amount = 0.3
+shader_parameter/lighten_amount = 1.5
+shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
+shader_parameter/light_direction = Vector3(-0.96, -0.18, 0.2)
+
+[sub_resource type="QuadMesh" id="QuadMesh_drrla"]
+material = SubResource("ShaderMaterial_lnqht")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_74ro3"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_75j87"]
+blend_mode = 3
+
+[sub_resource type="LabelSettings" id="LabelSettings_qlre5"]
+font_size = 31
+
+[sub_resource type="LabelSettings" id="LabelSettings_54der"]
+font_size = 21
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wtufn"]
+size = Vector2(200, 25)
+
+[node name="Main" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8067, 31.1921, 2.76027)
+script = ExtResource("1_l2ko3")
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.954288, -0.287605, 0.0813485, -0.0968865, 0.555135, 0.826098, -0.282749, 0.780454, -0.557624, -343.713, 129.32, 54.5986)
+visible = false
+light_color = Color(0.998892, 0.990796, 0.972349, 1)
+light_energy = 0.787
+light_bake_mode = 1
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_lxhjq")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.8582, 31.192, 27.6165)
+navigation_mesh = SubResource("NavigationMesh_aqc10")
+
+[node name="Ground" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_4qwfp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8067, 31.1921, 2.76027)
+
+[node name="Player" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_w8oro")]
+transform = Transform3D(-0.0122172, 0, 0.999925, 0, 1, 0, -0.999925, 0, -0.0122172, 7.41363, 31.778, 22.5204)
+floor_stop_on_slope = false
+floor_max_angle = 1.0472
+interaction_radius = 10.0
+transparent_material = ExtResource("8_vpk5c")
+npc_manager_path = NodePath("../../../NPCManager")
+
+[node name="Camera3D" parent="SubViewportContainer/SubViewport/Player" index="1"]
+transform = Transform3D(1, 2.98023e-08, -8.9407e-08, 0, 0.896486, 0.443071, 8.9407e-08, -0.443071, 0.896487, 0, 20, 30)
+projection = 1
+fov = 37.8493
+size = 20.14
+script = ExtResource("7_hun0x")
+transparent_material = ExtResource("8_vpk5c")
+player_path = NodePath("..")
+
+[node name="PostProcessing" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Player/Camera3D" index="0"]
+transform = Transform3D(-0.330514, 0, 0.943801, 0.556084, 0.80799, 0.194738, -0.762582, 0.589196, -0.267052, -18.8044, -37.5508, -19.4118)
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_drrla")
+skeleton = NodePath("../../..")
+
+[node name="NPC" parent="SubViewportContainer/SubViewport" instance=ExtResource("8_sjtqr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.7646, 32.1943, 25.7195)
+npc_id = 1
+target_item_id = 1
+return_threshold = 10.0
+
+[node name="Lamps" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Lamp" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.6315, 30.9595, -4.31116)
+
+[node name="Lamp2" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2526, 30.9595, -4.31116)
+
+[node name="Lamp3" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58287, 30.9595, -4.31116)
+
+[node name="Lamp4" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.2754, 30.9595, 28.0977)
+
+[node name="Lamp5" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.1002, 30.9595, 28.0977)
+
+[node name="Lamp6" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.9788, 30.9595, 28.0977)
+
+[node name="Lamp7" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.1199, 30.9595, -4.31116)
+
+[node name="Buildings" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Shop" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
+
+[node name="Shop2" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -7.40722, 31.3967, 42.5829)
+
+[node name="Shop3" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.3375, 31.4399, -17.8735)
+
+[node name="Shop4" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.37028, 31.3967, -17.7607)
+
+[node name="Items" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Gold Watch" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5192, 33.1463, 25.6524)
+item_id = 1
+item_name = "Gold Watch"
+
+[node name="Banana" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1847, 32.1121, -14.5707)
+item_id = 2
+item_name = "Banana"
+
+[node name="Blueprints" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.48, 32.0769, -14.8534)
+item_id = 3
+item_name = "Blueprints"
+
+[node name="LargeItem" parent="SubViewportContainer/SubViewport/Items" groups=["interactable"] instance=ExtResource("4_hj7ko")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0617, 32.5732, -14.8765)
+
+[node name="NPCManager" type="Node3D" parent="."]
+script = ExtResource("14_dhql6")
+
+[node name="Phone" type="Control" parent="."]
+material = SubResource("CanvasItemMaterial_74ro3")
+layout_mode = 3
+anchor_right = 1.003
+anchor_bottom = 1.0
+offset_right = 0.23999
+focus_mode = 2
+mouse_filter = 1
+script = ExtResource("16_oaa3n")
+
+[node name="Panel" type="Panel" parent="Phone"]
+material = SubResource("CanvasItemMaterial_75j87")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1299.0
+offset_top = 278.0
+offset_right = -41.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_filter = 1
+theme = ExtResource("17_h4vm3")
+
+[node name="Panel" type="Panel" parent="Phone/Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.104
+offset_bottom = -0.240005
+
+[node name="AppTabBar" type="TabBar" parent="Phone/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.104
+anchor_right = 1.0
+anchor_bottom = 0.19
+offset_top = -0.304001
+offset_right = -2.0
+offset_bottom = -0.190002
+theme = ExtResource("17_h4vm3")
+tab_count = 2
+tab_0/title = "    Jobs    "
+tab_1/title = "    Banking    "
+
+[node name="MissionTabBar" type="TabBar" parent="Phone/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.19
+anchor_right = 1.0
+anchor_bottom = 0.278
+offset_top = -0.190002
+offset_right = -1.0
+offset_bottom = 0.321976
+theme = ExtResource("17_h4vm3")
+tab_count = 3
+tab_0/title = "    Available    "
+tab_1/title = "    Active    "
+tab_2/title = "    Complete    "
+
+[node name="MissionNameLabel" type="Label" parent="Phone/Panel/MissionTabBar"]
+layout_mode = 2
+anchor_left = 0.073
+anchor_top = 1.486
+anchor_right = 0.929
+anchor_bottom = 2.257
+offset_left = 0.171997
+offset_top = 0.0359955
+offset_right = -0.0440063
+offset_bottom = -0.0180206
+text = "Test Title"
+label_settings = SubResource("LabelSettings_qlre5")
+autowrap_mode = 3
+
+[node name="MissionDescriptionLabel" type="Label" parent="Phone/Panel/MissionTabBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.073
+anchor_top = 2.554
+anchor_right = 0.922
+anchor_bottom = 4.189
+offset_left = 0.171997
+offset_top = 0.00398254
+offset_right = 0.00796509
+offset_bottom = 0.0139771
+text = "Test Description"
+label_settings = SubResource("LabelSettings_54der")
+autowrap_mode = 3
+
+[node name="Missions" type="HBoxContainer" parent="Phone/Panel/MissionTabBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 7.703
+anchor_right = 1.002
+anchor_bottom = 8.984
+offset_left = 2.0
+offset_top = -0.0137329
+offset_right = -0.170044
+offset_bottom = 0.020752
+alignment = 1
+
+[node name="PreviousMissionButton" type="Button" parent="Phone/Panel/MissionTabBar/Missions"]
+layout_mode = 2
+text = "        Back        "
+flat = true
+
+[node name="AcceptMissionButton" type="Button" parent="Phone/Panel/MissionTabBar/Missions"]
+layout_mode = 2
+text = "        Accept        "
+flat = true
+
+[node name="AbandonMissionButton" type="Button" parent="Phone/Panel/MissionTabBar/Missions"]
+visible = false
+layout_mode = 2
+text = "      Abandon      "
+flat = true
+
+[node name="NextMissionButton" type="Button" parent="Phone/Panel/MissionTabBar/Missions"]
+layout_mode = 2
+theme = ExtResource("17_h4vm3")
+text = "        Next        "
+flat = true
+
+[node name="ColorRect2" type="ColorRect" parent="Phone/Panel/MissionTabBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 71.0
+offset_bottom = 0.208008
+color = Color(0.314316, 0.314316, 0.314316, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="Phone/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.113
+offset_top = 154.0
+offset_bottom = 64.47
+color = Color(0.314316, 0.314316, 0.314316, 1)
+
+[node name="Header" type="ColorRect" parent="Phone/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.103
+offset_bottom = 1.56999
+
+[node name="CloseButton" type="Button" parent="Phone/Panel/Header"]
+layout_mode = 2
+anchor_left = 0.775
+anchor_right = 0.995
+anchor_bottom = 0.102
+offset_left = 19.85
+offset_top = 1.0
+offset_right = -0.0700073
+offset_bottom = 76.33
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "Close"
+flat = true
+
+[node name="Phone Name" type="Label" parent="Phone/Panel/Header"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.043
+anchor_top = 0.012
+anchor_right = 0.515
+anchor_bottom = 0.104
+offset_left = -0.198
+offset_top = -2.02
+offset_right = 3.20996
+offset_bottom = 75.16
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "STEELBAQ LTD"
+vertical_alignment = 1
+
+[node name="ColorRect3" type="ColorRect" parent="Phone/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.113
+offset_top = 84.0
+offset_bottom = -5.53
+color = Color(0.314316, 0.314316, 0.314316, 1)
+
+[node name="DialogueBox" parent="." instance=ExtResource("9_u6f7j")]
+anchor_left = 0.268
+anchor_right = 0.681
+offset_left = -12.56
+offset_right = 16.4799
+
+[node name="InventoryUI" parent="." instance=ExtResource("5_thrj7")]
+
+[node name="PickupPromptUI" parent="." instance=ExtResource("6_7yc5l")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0308838, 9.09296)
+mesh = SubResource("PlaneMesh_wtufn")
+
+[editable path="SubViewportContainer/SubViewport/Ground"]
+[editable path="SubViewportContainer/SubViewport/Player"]

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqkilbctqxluj"]
+
+[ext_resource type="PackedScene" uid="uid://cap3ppk1bfc5c" path="res://Building.tscn" id="1_tbnke"]
+[ext_resource type="PackedScene" uid="uid://c4ogqvs2en2ds" path="res://pc.tscn" id="2_avh31"]
+
+[node name="Home" type="Node3D"]
+
+[node name="Building" parent="." instance=ExtResource("1_tbnke")]
+
+[node name="PC" parent="." instance=ExtResource("2_avh31")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17053, -3.52655)
+
+[editable path="Building"]

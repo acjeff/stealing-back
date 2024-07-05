@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://chh3dpqqco5fc"]
+
+[ext_resource type="Script" path="res://LargeItem.gd" id="1_msmak"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l4qcv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_mju5x"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uepxd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0tdt6"]
+size = Vector3(1.5, 1, 1.5)
+
+[node name="LargeItem" type="RigidBody3D" groups=["LargeItem"]]
+mass = 3.63
+physics_material_override = SubResource("PhysicsMaterial_l4qcv")
+script = ExtResource("1_msmak")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_mju5x")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+visible = false
+shape = SubResource("BoxShape3D_uepxd")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_0tdt6")

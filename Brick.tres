@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b8hib0afwtnqg"]
+
+[ext_resource type="Shader" path="res://Brick.gdshader" id="1_tatur"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_tatur")
+shader_parameter/noise_scale = 700.0
+shader_parameter/brick_shift = 1.6
+shader_parameter/brick_factor = 12.0
+shader_parameter/brick_scale = Vector2(50, 100)
+shader_parameter/brick_color = Vector4(0.745098, 0.341176, 0.219608, 1)
+shader_parameter/brick_color2 = Vector4(0.37, 0.12, 0.04, 1)
+shader_parameter/mortar_joint_color = Vector4(1, 0.98777, 0.987778, 1)

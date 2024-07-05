@@ -1,0 +1,438 @@
+[gd_scene load_steps=15 format=3 uid="uid://cap3ppk1bfc5c"]
+
+[ext_resource type="Script" path="res://Building.gd" id="1_x3ukl"]
+[ext_resource type="Material" uid="uid://bu8s6w1pkykey" path="res://Glass.tres" id="2_ampv7"]
+[ext_resource type="PackedScene" uid="uid://b6hewdci6k772" path="res://DoorRoot.tscn" id="2_uefa8"]
+
+[sub_resource type="Shader" id="Shader_ebq08"]
+code = "shader_type spatial;
+
+render_mode cull_front, unshaded, depth_draw_never;
+
+global uniform vec4 outline_color;
+global uniform float outline_width;
+
+void vertex() {
+	vec4 clip_position = 
+			PROJECTION_MATRIX *
+			(MODELVIEW_MATRIX * vec4(VERTEX, 1));
+	vec3 clip_normal =
+			mat3(PROJECTION_MATRIX) *
+			(mat3(MODELVIEW_MATRIX) * NORMAL);
+	clip_position.xy +=
+			normalize(clip_normal.xy) /
+			VIEWPORT_SIZE *
+			clip_position.w *
+			outline_width;
+	POSITION = clip_position;
+}
+
+void fragment() {
+	ALBEDO = outline_color.rgb;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kasu0"]
+render_priority = 0
+shader = SubResource("Shader_ebq08")
+
+[sub_resource type="Shader" id="Shader_7dseh"]
+code = "shader_type spatial;
+
+#define USE_ALPHA 0
+#define USE_ALPHA_CUTOFF 0
+#define USE_EMISSION 0
+#define USE_REFLECTIONS 1
+#define USE_NORMAL_MAP 0
+#define USE_OCCLUSION 0
+#define USE_ANISOTROPY 0
+#define USE_BACKLIGHT 0
+#define USE_REFRACTION 0
+
+#if USE_ALPHA
+render_mode depth_draw_always;
+#endif
+
+#include \"includes/base-cel-shader.gdshaderinc\"
+
+#if USE_EMISSION
+#include \"includes/emission.gdshaderinc\"
+#endif
+
+#if USE_REFLECTIONS
+#include \"includes/reflections.gdshaderinc\"
+#endif
+
+#if USE_NORMAL_MAP
+#include \"includes/normal-map.gdshaderinc\"
+#endif
+
+#if USE_OCCLUSION
+#include \"includes/occlusion.gdshaderinc\"
+#endif
+
+#if USE_ANISOTROPY
+#include \"includes/anisotropy.gdshaderinc\"
+#endif
+
+#if USE_BACKLIGHT
+#include \"includes/backlight.gdshaderinc\"
+#endif
+
+#if USE_REFRACTION
+#include \"includes/refraction.gdshaderinc\"
+#elif !USE_REFRACTION && USE_ALPHA
+#include \"includes/transparency.gdshaderinc\"
+#endif
+
+group_uniforms BaseProperties;
+#if USE_ALPHA_CUTOFF
+uniform float alpha_cutoff: hint_range(0.0, 1.0) = 0.5;
+#endif
+uniform vec4 color: source_color = vec4(0.7, 0.12, 0.86, 1.0);
+uniform sampler2D base_texture: source_color;
+uniform vec4 specular: source_color = vec4(0.3, 0.3, 0.3, 0.5);
+uniform sampler2D specular_texture: hint_default_white;
+uniform vec4 fresnel: source_color = vec4(0.2, 0.2, 0.2, 0.3);
+uniform sampler2D fresnel_texture: hint_default_white;
+group_uniforms;
+
+varying vec3 SPECULAR_COLOR;
+varying float SPECULAR_STRENGTH;
+varying vec3 FRESNEL_COLOR;
+varying float FRESNEL_STRENGTH;
+
+group_uniforms Tiling;
+uniform vec2 uv_scale = vec2(1,1);
+uniform vec2 uv_offset = vec2(0,0);
+group_uniforms;
+
+
+void vertex() {
+	UV = UV * uv_scale.xy + uv_offset.xy;
+}
+
+void fragment() {
+	ALBEDO = color.rgb * texture(base_texture, UV).rgb;
+#if USE_ALPHA
+	float alpha = color.a * texture(base_texture, UV).a;
+	ALBEDO *= alpha;
+#elif USE_ALPHA_CUTOFF
+	ALPHA = color.a * texture(base_texture, UV).a;
+	ALPHA_SCISSOR_THRESHOLD = color.a * texture(base_texture, UV).a;
+#endif
+	
+#if USE_REFRACTION && USE_ALPHA
+	EMISSION += refraction_fragment(alpha, NORMAL, SCREEN_UV, FRAGCOORD.z);
+#elif !USE_REFRACTION && USE_ALPHA
+	EMISSION += transparency_fragment(alpha, SCREEN_UV);
+#endif
+	
+	SPECULAR_COLOR = specular.rgb * texture(specular_texture, UV).rgb;
+	SPECULAR_STRENGTH = specular.a * texture(specular_texture, UV).a;
+	FRESNEL_COLOR = fresnel.rgb * texture(fresnel_texture, UV).rgb;
+	FRESNEL_STRENGTH = fresnel.a * texture(fresnel_texture, UV).a;
+	
+#if USE_EMISSION
+	EMISSION += emission_fragment(UV);
+#endif
+	
+#if USE_REFLECTIONS
+	Surface surf = reflections_fragment(UV);
+	METALLIC = surf.metallic;
+	ROUGHNESS = surf.roughness;
+#endif
+	
+#if USE_NORMAL_MAP
+	NormalData normal = normal_map_fragment(UV, NORMAL, TANGENT, BINORMAL);
+	NORMAL = normal.vector;
+	NORMAL_MAP = normal.map;
+	NORMAL_MAP_DEPTH = normal.depth;
+#endif
+	
+#if USE_OCCLUSION
+	OcclusionData occlusion = occlusion_fragment(UV);
+	AO = occlusion.ao;
+	AO_LIGHT_AFFECT = occlusion.ao_light_affect;
+#endif
+	
+#if USE_ANISOTROPY
+	AnisotropyData aniso = anisotropy_fragment(UV);
+	ANISOTROPY_DIR = aniso.direction;
+	ANISOTROPY_RATIO = aniso.ratio;
+#endif
+	
+#if USE_BACKLIGHT
+	BACKLIGHT = backlight_fragment(UV);
+#endif
+}
+
+void light() {
+#if USE_BACKLIGHT
+	DIFFUSE_LIGHT += backlight_diffuse(
+			ALBEDO,
+			LIGHT_COLOR,
+			LIGHT,
+			NORMAL,
+			ATTENUATION,
+			BACKLIGHT
+	);
+#else
+	DIFFUSE_LIGHT += diffuse_light(
+			ALBEDO,
+			LIGHT_COLOR,
+			LIGHT,
+			NORMAL,
+			ATTENUATION
+	);
+#endif
+	
+#if USE_ANISOTROPY
+	SPECULAR_LIGHT += anisotropy_specular(
+			LIGHT_COLOR,
+			SPECULAR_COLOR,
+			SPECULAR_STRENGTH,
+			NORMAL,
+			VIEW,
+			LIGHT,
+			ATTENUATION,
+			UV,
+			ANISOTROPY_DIR,
+			ANISOTROPY_RATIO
+	);
+#else
+	SPECULAR_LIGHT += specular_light(
+			LIGHT_COLOR,
+			SPECULAR_COLOR,
+			SPECULAR_STRENGTH,
+			NORMAL,
+			VIEW,
+			LIGHT,
+			ATTENUATION
+	);
+#endif
+
+	SPECULAR_LIGHT += fresnel_light(
+			LIGHT_COLOR,
+			FRESNEL_COLOR,
+			FRESNEL_STRENGTH,
+			NORMAL,
+			VIEW,
+			LIGHT,
+			ATTENUATION
+	);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wy4fa"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_kasu0")
+shader = SubResource("Shader_7dseh")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mamp1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjwjw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a0css"]
+albedo_color = Color(0.211893, 0.136139, 0.0223293, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_rw86r"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xohg"]
+size = Vector3(20, 5, 19)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l6omg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ulnw"]
+transparency = 1
+blend_mode = 2
+albedo_color = Color(1, 1, 1, 0)
+shadow_to_opacity = true
+
+[node name="Building" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Base" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.045105, -0.946625, 0.132019)
+size = Vector3(19.4662, 1, 19.4927)
+material = SubResource("ShaderMaterial_wy4fa")
+
+[node name="DoorRoot" parent="." instance=ExtResource("2_uefa8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.988162, 1.05374, 9.96721)
+
+[node name="Walls" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, 2.02588, -0.000530243)
+use_collision = true
+size = Vector3(20, 5, 20)
+material = SubResource("StandardMaterial3D_mamp1")
+
+[node name="Roof" type="CSGBox3D" parent="Walls" groups=["wall"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.549, 0)
+visible = false
+operation = 2
+collision_layer = 3
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_yjwjw")
+
+[node name="Interior" type="CSGBox3D" parent="Walls"]
+operation = 2
+size = Vector3(19, 4.5, 19)
+
+[node name="Door" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.968601, 9.60467)
+operation = 2
+size = Vector3(2, 3, 1)
+
+[node name="WindowGlass2" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5255, -0.212568, 9.78416)
+size = Vector3(2.1, 2.1, 0.1)
+material = ExtResource("2_ampv7")
+
+[node name="WindowGlass3" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.71641, -0.212568, 10.1354)
+size = Vector3(2.1, 2.1, 0.1)
+material = ExtResource("2_ampv7")
+
+[node name="Window1" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5142, -0.215113, 9.56938)
+visible = false
+operation = 2
+size = Vector3(2, 2, 1)
+
+[node name="Window2" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.56261, -0.215113, 9.66092)
+operation = 2
+size = Vector3(2, 2, 1)
+
+[node name="RealRoof" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2452, 0)
+visible = false
+collision_layer = 3
+size = Vector3(21, 1, 21)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0119872, 1.29849, 10.7514)
+light_color = Color(1, 0.945098, 0.498039, 1)
+light_energy = 0.411
+light_indirect_energy = 6.979
+light_size = 0.089
+light_bake_mode = 1
+
+[node name="WindowGlass1" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.14577, -0.212568, 10.1354)
+size = Vector3(2.1, 2.1, 0.1)
+material = ExtResource("2_ampv7")
+
+[node name="Window3" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1589, -0.215113, 9.56938)
+operation = 2
+size = Vector3(2, 2, 1)
+
+[node name="Window4" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.11048, -0.215113, 9.66092)
+visible = false
+operation = 2
+size = Vector3(2, 2, 1)
+
+[node name="WindowGlass2" type="CSGBox3D" parent="Walls/Window4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0371099, 0.00254512, 0.313427)
+size = Vector3(2.1, 2.1, 0.1)
+material = ExtResource("2_ampv7")
+
+[node name="Walls" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, 4.95462, -0.000530243)
+use_collision = true
+size = Vector3(20, 5, 20)
+material = SubResource("StandardMaterial3D_mamp1")
+
+[node name="Interior" type="CSGBox3D" parent="Walls/Walls"]
+operation = 2
+size = Vector3(19, 4.5, 19)
+
+[node name="RealRoof" type="CSGBox3D" parent="Walls/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2452, 0)
+collision_layer = 3
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="Window4" type="CSGBox3D" parent="Walls/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.11048, -0.215113, 9.66092)
+visible = false
+operation = 2
+size = Vector3(2, 2, 1)
+
+[node name="WindowGlass2" type="CSGBox3D" parent="Walls/Walls/Window4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0371099, 0.00254512, 0.313427)
+size = Vector3(2.1, 2.1, 0.1)
+material = ExtResource("2_ampv7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_rw86r")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0541146)
+script = ExtResource("1_x3ukl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0163236, 1.05253, -0.52316)
+shape = SubResource("BoxShape3D_3xohg")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 4.11584, 0)
+light_energy = 5.86
+spot_range = 95.977
+spot_angle = 87.85
+
+[node name="TransWalls" type="Node3D" parent="."]
+
+[node name="Walls2" type="CSGBox3D" parent="TransWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, -1.83166, -0.000530243)
+use_collision = true
+size = Vector3(20, 5, 20)
+material = SubResource("StandardMaterial3D_l6omg")
+
+[node name="Interior" type="CSGBox3D" parent="TransWalls/Walls2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05775, 0)
+operation = 2
+size = Vector3(19, 4.5, 19)
+
+[node name="Door" type="CSGBox3D" parent="TransWalls/Walls2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.894, 9.5755)
+operation = 2
+size = Vector3(2, 3, 1)
+
+[node name="Walls3" type="CSGBox3D" parent="TransWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, 2.09299, -0.000530243)
+use_collision = true
+size = Vector3(20, 5, 20)
+material = SubResource("StandardMaterial3D_2ulnw")
+
+[node name="Interior" type="CSGBox3D" parent="TransWalls/Walls3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.135241, 0)
+operation = 2
+size = Vector3(19, 4.5, 19)
+
+[node name="Door" type="CSGBox3D" parent="TransWalls/Walls3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.10984, 9.5755)
+operation = 2
+size = Vector3(2, 3, 1)
+
+[node name="Walls4" type="CSGBox3D" parent="TransWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, 7.07889, -0.000530243)
+use_collision = true
+size = Vector3(20, 5, 20)
+material = SubResource("StandardMaterial3D_2ulnw")
+
+[node name="Interior" type="CSGBox3D" parent="TransWalls/Walls4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.135241, 0)
+operation = 2
+size = Vector3(19, 4.5, 19)
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8.8724, 0)
+light_energy = 5.86
+spot_range = 95.977
+spot_angle = 87.85

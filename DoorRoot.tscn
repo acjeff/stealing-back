@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6hewdci6k772"]
+
+[ext_resource type="Script" path="res://Door.gd" id="1_wt4s3"]
+[ext_resource type="Material" uid="uid://bu8s6w1pkykey" path="res://Glass.tres" id="2_fn72j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2t4gx"]
+size = Vector3(4, 3, 3)
+
+[node name="DoorRoot" type="Node3D"]
+script = ExtResource("1_wt4s3")
+open_angle = 120.0
+
+[node name="DoorOffset" type="Node3D" parent="."]
+
+[node name="Door" type="CSGBox3D" parent="DoorOffset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+use_collision = true
+size = Vector3(2, 3, 0.1)
+material = ExtResource("2_fn72j")
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+motor/enable = true
+
+[node name="ProximityArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ProximityArea"]
+shape = SubResource("BoxShape3D_2t4gx")

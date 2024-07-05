@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dis65b0f34kqb"]
+
+[ext_resource type="Shader" path="res://Roof.gdshader" id="1_hl77q"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_hl77q")
+shader_parameter/wave_amplitude = 0.1
+shader_parameter/wave_frequency = 10.0
+shader_parameter/wave_speed = 1.0
+shader_parameter/base_color = Color(0.72, 0.45, 0.2, 1)
+shader_parameter/highlight_color = Color(0.95, 0.64, 0.3, 1)
+shader_parameter/metallic = 1.0
+shader_parameter/roughness = 0.3
