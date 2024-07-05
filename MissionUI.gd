@@ -31,7 +31,7 @@ var mission_list: Array = [
 ]
 
 var current_mission_index = 0
-var status_list_viewing = "active"
+var status_list_viewing = "available"
 var app_list_viewing = "missions"
 
 @onready var name_label = $"Panel/MissionTabBar/MissionNameLabel"
