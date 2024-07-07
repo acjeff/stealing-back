@@ -1,10 +1,229 @@
-[gd_scene load_steps=5 format=3 uid="uid://bys3tvwvyhvo6"]
+[gd_scene load_steps=26 format=3 uid="uid://bys3tvwvyhvo6"]
 
 [ext_resource type="Script" path="res://NPC.gd" id="1_p0yfx"]
-[ext_resource type="PackedScene" uid="uid://cscnp2kc77bru" path="res://person.tscn" id="2_1r456"]
+[ext_resource type="Material" uid="uid://co05rv81idp13" path="res://skinTan.tres" id="2_malfj"]
+[ext_resource type="Material" uid="uid://bb43ngplsfis2" path="res://addons/flexible_toon_shader/FlexibleToonMaterial.tres" id="3_vqvun"]
+[ext_resource type="Material" uid="uid://c0k77m4afcav1" path="res://Shirt_Navy.tres" id="4_irhqv"]
+[ext_resource type="Material" uid="uid://bhgarxjh8gj44" path="res://trouser.tres" id="5_poyal"]
+[ext_resource type="PackedScene" uid="uid://q7ea3pi0danx" path="res://FullMug.tscn" id="6_6wmb3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5tfjk"]
 radius = 0.522
+
+[sub_resource type="Shader" id="Shader_fxvh0"]
+code = "shader_type spatial;
+
+//render_mode ambient_light_disabled;
+
+
+uniform vec4 albedo : source_color = vec4(1.0f);
+uniform sampler2D albedo_texture : source_color;
+uniform bool clamp_diffuse_to_max = false;
+
+uniform int cuts : hint_range(1, 8) = 3;
+uniform float wrap : hint_range(-2.0f, 2.0f) = 0.0f;
+uniform float steepness : hint_range(1.0f, 8.0f) = 1.0f;
+
+uniform bool use_attenuation = true;
+
+uniform bool use_specular = true;
+uniform float specular_strength : hint_range(0.0f, 1.0f) = 1.0f;
+uniform float specular_shininess : hint_range(0.0f, 32.0f) = 16.0f;
+uniform sampler2D specular_map : source_color;
+
+uniform bool use_rim = true;
+uniform float rim_width : hint_range(0.0f, 16.0f) = 8.0f;
+uniform vec4 rim_color : source_color = vec4(1.0f);
+
+uniform bool use_ramp = false;
+uniform sampler2D ramp : source_color;
+
+uniform bool use_borders = false;
+uniform float border_width = 0.01f;
+
+varying vec3 vertex_pos;
+varying vec3 normal;
+
+float split_specular(float specular) {
+	return step(0.5f, specular);
+}
+
+void vertex() {
+	vertex_pos = VERTEX;
+	normal = NORMAL;
+}
+
+void fragment() {
+	ALBEDO = albedo.rgb * texture(albedo_texture, UV).rgb;
+}
+
+void light() {
+	// Attenuation.
+	float attenuation = 1.0f;
+	if (use_attenuation) {
+		attenuation = ATTENUATION;
+	}
+	
+	// Diffuse lighting.
+	float NdotL = dot(NORMAL, LIGHT);
+	float diffuse_amount = NdotL + (attenuation - 1.0) + wrap;
+	//float diffuse_amount = NdotL * attenuation + wrap;
+	diffuse_amount *= steepness;
+	float cuts_inv = 1.0f / float(cuts);
+	float diffuse_stepped = clamp(diffuse_amount + mod(1.0f - diffuse_amount, cuts_inv), 0.0f, 1.0f);
+
+	// Calculate borders.
+	float border = 0.0f;
+	if (use_borders) {
+		float corr_border_width = length(cross(NORMAL, LIGHT)) * border_width * steepness;
+		border = step(diffuse_stepped - corr_border_width, diffuse_amount)
+				 - step(1.0 - corr_border_width, diffuse_amount);
+	}
+	
+	// Apply diffuse result to different styles.
+	vec3 diffuse = ALBEDO.rgb * LIGHT_COLOR / PI;
+	if (use_ramp) {
+		diffuse *= texture(ramp, vec2(diffuse_stepped * (1.0f - border), 0.0f)).rgb;
+	} else {
+		diffuse *= diffuse_stepped * (1.0f - border);
+	}
+	
+	if (clamp_diffuse_to_max) {
+		// Clamp diffuse to max for multiple light sources.
+		DIFFUSE_LIGHT = max(DIFFUSE_LIGHT, diffuse);
+	} else {
+		DIFFUSE_LIGHT += diffuse;
+	}
+	
+	// Specular lighting.
+	if (use_specular) {
+		vec3 H = normalize(LIGHT + VIEW);
+		float NdotH = dot(NORMAL, H);
+		float specular_amount = max(pow(NdotH, specular_shininess*specular_shininess), 0.0f)
+							    * texture(specular_map, UV).r
+								* attenuation;
+		specular_amount = split_specular(specular_amount);
+		SPECULAR_LIGHT += specular_strength * specular_amount * LIGHT_COLOR;
+	}
+	
+	// Simple rim lighting.
+	if (use_rim) {
+		float NdotV = dot(NORMAL, VIEW);
+		float rim_light = pow(1.0 - NdotV, rim_width);
+		SPECULAR_LIGHT += rim_light * rim_color.rgb * rim_color.a * LIGHT_COLOR / PI; //Changed DIFFUSE_LIGHT to SPECULAR_LIGHT while migrating for similar result
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qjhxk"]
+render_priority = 0
+shader = SubResource("Shader_fxvh0")
+shader_parameter/albedo = Color(0.323584, 0.323584, 0.323584, 1)
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/cuts = 5
+shader_parameter/wrap = 0.0
+shader_parameter/steepness = 1.0
+shader_parameter/use_attenuation = true
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.05
+
+[sub_resource type="SphereMesh" id="SphereMesh_wpl8i"]
+material = SubResource("ShaderMaterial_qjhxk")
+radius = 0.18
+height = 0.2
+radial_segments = 10
+rings = 4
+is_hemisphere = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_d6qte"]
+material = ExtResource("2_malfj")
+radius = 0.18
+height = 0.4
+radial_segments = 10
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_tdkst"]
+material = ExtResource("3_vqvun")
+radius = 0.04
+height = 0.08
+radial_segments = 10
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5cbrt"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_fwllt"]
+material = SubResource("StandardMaterial3D_5cbrt")
+radius = 0.02
+height = 0.04
+radial_segments = 10
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_68u1s"]
+material = ExtResource("3_vqvun")
+radius = 0.02
+height = 0.06
+radial_segments = 10
+rings = 4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vhhkw"]
+material = ExtResource("4_irhqv")
+radius = 0.15
+height = 0.82
+
+[sub_resource type="BoxMesh" id="BoxMesh_rtatt"]
+material = ExtResource("4_irhqv")
+size = Vector3(0.5, 0.45, 0.3)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bue4w"]
+material = ExtResource("4_irhqv")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_l6q2j"]
+material = ExtResource("2_malfj")
+radius = 0.07
+height = 0.7
+radial_segments = 4
+rings = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_d5qb8"]
+material = ExtResource("2_malfj")
+radius = 0.07
+height = 0.5
+radial_segments = 4
+rings = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_l5jc6"]
+material = ExtResource("5_poyal")
+radius = 0.15
+height = 0.55
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vfcfl"]
+material = ExtResource("5_poyal")
+radius = 0.1
+height = 0.7
+radial_segments = 4
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_71xm0"]
+material = ExtResource("3_vqvun")
+size = Vector3(0.2, 0.1, 0.3)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_rkrip"]
+material = ExtResource("2_malfj")
+radius = 0.07
+height = 0.3
+radial_segments = 4
+rings = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_aqvd5"]
 size = Vector3(4, 4, 4)
@@ -15,7 +234,106 @@ script = ExtResource("1_p0yfx")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_5tfjk")
 
-[node name="Person" parent="CollisionShape3D" instance=ExtResource("2_1r456")]
+[node name="Person" type="Node3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.047, 0)
+
+[node name="Skeleton3D" type="Skeleton3D" parent="CollisionShape3D/Person"]
+
+[node name="Head" type="Node3D" parent="CollisionShape3D/Person/Skeleton3D"]
+
+[node name="Hat" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.735251, 0)
+mesh = SubResource("SphereMesh_wpl8i")
+skeleton = NodePath("../..")
+
+[node name="Skull" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000732422, 0.667625, 0.000488281)
+mesh = SubResource("SphereMesh_d6qte")
+skeleton = NodePath("../..")
+
+[node name="Eye" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head"]
+transform = Transform3D(0.89431, 0, -0.447447, 0, 1, 0, 0.447447, 0, 0.89431, 0.0823706, 0.665, -0.122089)
+visible = false
+mesh = SubResource("SphereMesh_tdkst")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head/Eye"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0229111)
+mesh = SubResource("SphereMesh_fwllt")
+skeleton = NodePath("../../..")
+
+[node name="Eye2" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head"]
+transform = Transform3D(0.911819, 0, 0.410592, 0, 1, 0, -0.410592, 0, 0.911819, -0.0864298, 0.665, -0.122089)
+visible = false
+mesh = SubResource("SphereMesh_tdkst")
+skeleton = NodePath("../..")
+
+[node name="Eye3" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head/Eye2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0229111)
+mesh = SubResource("SphereMesh_fwllt")
+skeleton = NodePath("../../..")
+
+[node name="Nose" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00114441, 0.619713, -0.173973)
+visible = false
+mesh = SubResource("SphereMesh_68u1s")
+skeleton = NodePath("../../..")
+
+[node name="Shirt" type="Node3D" parent="CollisionShape3D/Person/Skeleton3D"]
+
+[node name="Shoulders" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Shirt"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.266769, 0)
+mesh = SubResource("CapsuleMesh_vhhkw")
+skeleton = NodePath("../..")
+
+[node name="Abdomen" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Shirt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00146484, 0.0204058, 0.00412944)
+mesh = SubResource("BoxMesh_rtatt")
+skeleton = NodePath("../..")
+
+[node name="Sleeve" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Shirt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.307511, 0.166, 0)
+mesh = SubResource("CylinderMesh_bue4w")
+skeleton = NodePath("../../Left Arm")
+
+[node name="Sleeve2" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Shirt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.308, 0.166, 0)
+mesh = SubResource("CylinderMesh_bue4w")
+skeleton = NodePath("../../Left Arm")
+
+[node name="Left Arm" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.332, 0, 0)
+mesh = SubResource("CapsuleMesh_l6q2j")
+
+[node name="Right Arm" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 0.478692, -0.877983, 0, 0.877983, 0.478692, 0.331746, 0, -0.153137)
+mesh = SubResource("CapsuleMesh_d5qb8")
+
+[node name="Hips" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.28, 0.0199013)
+mesh = SubResource("CapsuleMesh_l5jc6")
+
+[node name="Left Leg" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.182, -0.551, 0)
+mesh = SubResource("CapsuleMesh_vfcfl")
+
+[node name="Left Foot" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Left Leg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.295, -0.055)
+mesh = SubResource("BoxMesh_71xm0")
+skeleton = NodePath("../..")
+
+[node name="Right Leg" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.182197, -0.550652, 0)
+mesh = SubResource("CapsuleMesh_vfcfl")
+
+[node name="Right Foot" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D/Right Leg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000197172, -0.295348, -0.0545239)
+mesh = SubResource("BoxMesh_71xm0")
+skeleton = NodePath("../..")
+
+[node name="Neck" type="MeshInstance3D" parent="CollisionShape3D/Person/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00538944, 0.45002, 0)
+mesh = SubResource("CapsuleMesh_rkrip")
 
 [node name="Area3D" type="Area3D" parent="."]
 
@@ -27,3 +345,5 @@ shape = SubResource("BoxShape3D_aqvd5")
 [node name="NPC" type="Node3D" parent="." groups=["NPCs"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 visible = false
+
+[node name="Cup" parent="." instance=ExtResource("6_6wmb3")]

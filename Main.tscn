@@ -1,8 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://dlf0h0uddaa50"]
+[gd_scene load_steps=27 format=3 uid="uid://dlf0h0uddaa50"]
 
 [ext_resource type="PackedScene" uid="uid://b3oq2bproach" path="res://Ground.tscn" id="1_4qwfp"]
 [ext_resource type="Script" path="res://Main.gd" id="1_l2ko3"]
-[ext_resource type="Environment" uid="uid://djc2tfxaclpnw" path="res://Main.tres" id="1_lxhjq"]
 [ext_resource type="PackedScene" uid="uid://c23j8wlafajl1" path="res://Player.tscn" id="2_w8oro"]
 [ext_resource type="PackedScene" uid="uid://cf7jwmqbppjjp" path="res://Item.tscn" id="3_66udm"]
 [ext_resource type="PackedScene" uid="uid://chh3dpqqco5fc" path="res://LargeItem.tscn" id="4_hj7ko"]
@@ -27,7 +26,7 @@ sky_material = SubResource("ProceduralSkyMaterial_wbhls")
 background_mode = 2
 background_color = Color(0.788235, 0.933333, 0.933333, 1)
 sky = SubResource("Sky_r36v1")
-ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_color = Color(0.303233, 0.303233, 0.303233, 1)
 ambient_light_sky_contribution = 0.0
 ambient_light_energy = 0.63
 adjustment_brightness = 0.92
@@ -66,16 +65,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch = true
-stretch_shrink = 4
+stretch_shrink = 2
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 handle_input_locally = false
-size = Vector2i(480, 270)
+size = Vector2i(960, 540)
 render_target_update_mode = 4
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(0.835222, -0.303173, 0.458792, 0, 0.8343, 0.551311, -0.549912, -0.460467, 0.696826, -1.59322, 33.6623, 2.76027)
-light_energy = 0.838
+light_color = Color(0.855039, 0.84781, 0.748398, 1)
+light_energy = 1.611
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.0
 shadow_enabled = true
@@ -113,7 +113,6 @@ npc_manager_path = NodePath("../../../NPCManager")
 
 [node name="Camera3D" parent="SubViewportContainer/SubViewport/Player" index="1"]
 transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 1.6, 2.156)
-environment = ExtResource("1_lxhjq")
 fov = 92.1
 size = 13.749
 script = ExtResource("7_hun0x")
@@ -124,7 +123,7 @@ player_path = NodePath("..")
 visible = false
 
 [node name="NPC" parent="SubViewportContainer/SubViewport" instance=ExtResource("8_sjtqr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.378, 94.5785, 31.24)
+transform = Transform3D(-0.977046, 0, -0.21303, 0, 1, 0, 0.21303, 0, -0.977046, 33.378, 94.5785, 1.78224)
 npc_id = 1
 target_item_id = 1
 return_threshold = 10.0
