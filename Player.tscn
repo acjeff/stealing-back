@@ -10,7 +10,7 @@ size = Vector3(2, 2, 2)
 height = 1.8
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748291, 0.579382, -0.0256348)
 script = ExtResource("1_hxrdx")
 
 [node name="DragJoint" type="PinJoint3D" parent="."]
@@ -25,9 +25,11 @@ transform = Transform3D(1, 0, 0, 0, 0.901077, 0.433659, 0, -0.433659, 0.901077, 
 shape = SubResource("BoxShape3D_8y3b0")
 
 [node name="Torch" type="SpotLight3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.361404, -0.239319, 0)
+light_color = Color(1, 1, 0.760784, 1)
 light_energy = 8.825
-spot_range = 13.309
+spot_range = 50.0268
+spot_angle = 20.2717
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0428805, 0)

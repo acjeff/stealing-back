@@ -10,6 +10,7 @@ const ROTATION_SPEED = 3.0
 @export var transparent_material: Material
 @export var ui_path: NodePath
 @export var npc_manager_path: NodePath
+@onready var phone = $"../../../Phone"
 
 var bag_weight: float = 0.0
 var inventory: Array = []
@@ -105,7 +106,7 @@ func _input(event):
 			$Torch.visible = !$Torch.visible
 
 		if Input.is_action_just_pressed("togglePhone"):
-			$"../Phone".visible = !$"../Phone".visible
+			phone.visible = !phone.visible
 
 		if Input.is_action_just_pressed("interact") and nearby_item:
 			if nearby_item.has_method("_on_interact"):

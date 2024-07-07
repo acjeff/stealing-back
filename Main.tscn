@@ -69,7 +69,6 @@ stretch = true
 stretch_shrink = 4
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-transparent_bg = true
 handle_input_locally = false
 size = Vector2i(480, 270)
 render_target_update_mode = 4
@@ -114,7 +113,7 @@ npc_manager_path = NodePath("../../../NPCManager")
 [node name="Camera3D" parent="SubViewportContainer/SubViewport/Player" index="1"]
 transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 1.6, 2.156)
 environment = ExtResource("1_lxhjq")
-fov = 63.0
+fov = 92.1
 size = 13.749
 script = ExtResource("7_hun0x")
 transparent_material = ExtResource("8_vpk5c")

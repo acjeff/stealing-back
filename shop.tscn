@@ -1,10 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://dfgpwypsfh05n"]
+[gd_scene load_steps=14 format=3 uid="uid://dfgpwypsfh05n"]
 
 [ext_resource type="PackedScene" uid="uid://b6hewdci6k772" path="res://DoorRoot.tscn" id="1_nmqt2"]
 [ext_resource type="Script" path="res://shop.gd" id="1_tlgw8"]
 [ext_resource type="Material" uid="uid://bu8s6w1pkykey" path="res://Glass.tres" id="2_uw562"]
 [ext_resource type="Material" uid="uid://co8hr2dk6xr2t" path="res://wood.tres" id="3_r0c80"]
-[ext_resource type="Script" path="res://Building.gd" id="3_w8bre"]
 [ext_resource type="PackedScene" uid="uid://chh3dpqqco5fc" path="res://LargeItem.tscn" id="4_6v1hj"]
 [ext_resource type="PackedScene" uid="uid://c202ubxoyj33o" path="res://stairs.tscn" id="4_tpgfq"]
 
@@ -122,11 +121,10 @@ material = SubResource("StandardMaterial3D_a0css")
 shape = SubResource("ConcavePolygonShape3D_rw86r")
 
 [node name="Ground floor Light" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 4.11584, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.370075, 4.52318, -7.62939e-06)
 light_energy = 10.0
-spot_range = 95.977
-spot_angle = 87.85
+spot_range = 7.99372
+spot_angle = 51.3805
 
 [node name="TransWalls" type="Node3D" parent="."]
 
@@ -216,14 +214,12 @@ size = Vector3(8, 1, 4)
 
 [node name="First Floor Light" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8.8724, 0)
-visible = false
 light_energy = 10.0
-spot_range = 95.977
-spot_angle = 87.85
+spot_range = 8.42589
+spot_angle = 58.8319
 
 [node name="InBuilding" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0541153)
-script = ExtResource("3_w8bre")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InBuilding"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0163231, 3.68821, -0.523159)
