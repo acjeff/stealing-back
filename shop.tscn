@@ -51,12 +51,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00242233, 0)
 operation = 2
 size = Vector3(19, 9.00129, 19)
 
-[node name="RealRoof2" type="CSGBox3D" parent="Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140076, 4.96138, -0.000530243)
-collision_layer = 3
-size = Vector3(20, 1, 20)
-material = SubResource("StandardMaterial3D_a0css")
-
 [node name="DoorCutout" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.79025, -2.95908, 9.5755)
 operation = 2
@@ -71,6 +65,56 @@ size = Vector3(19.0739, 4.60597, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0186329, 2.36188, 9.66141)
 operation = 2
 size = Vector3(19.0432, 3.17809, 1)
+
+[node name="Roof" type="Node3D" parent="Walls"]
+
+[node name="RealRoof2" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0395508, 4.67183, -9.02246)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof3" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 4.672, -0.022)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof4" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0400009, 4.672, -3.022)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof5" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0400009, 4.672, -6.022)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof6" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 4.672, -0.022)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof7" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 4.672, 2.978)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof8" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 4.672, 5.978)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
+
+[node name="RealRoof9" type="CSGBox3D" parent="Walls/Roof"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.039999, 4.672, 8.978)
+collision_layer = 3
+size = Vector3(21.2299, 0.420898, 2.70608)
+material = SubResource("StandardMaterial3D_a0css")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -150,8 +194,8 @@ use_collision = true
 metadata/floor_index = 1
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TransWalls/FirstFloor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.71005, 3.55054)
-size = Vector3(20, 0.4, 27.1011)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.71005, 2.2016)
+size = Vector3(20, 0.4, 24.4032)
 material = ExtResource("3_r0c80")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="TransWalls/FirstFloor"]
