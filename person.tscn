@@ -1,6 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://cscnp2kc77bru"]
+[gd_scene load_steps=21 format=3 uid="uid://cscnp2kc77bru"]
 
+[ext_resource type="Material" uid="uid://co05rv81idp13" path="res://skinTan.tres" id="1_1gqst"]
 [ext_resource type="Material" uid="uid://bb43ngplsfis2" path="res://addons/flexible_toon_shader/FlexibleToonMaterial.tres" id="1_i8ysb"]
+[ext_resource type="Material" uid="uid://c0k77m4afcav1" path="res://Shirt_Navy.tres" id="2_yse8b"]
+[ext_resource type="Material" uid="uid://bhgarxjh8gj44" path="res://trouser.tres" id="4_f2hcx"]
 
 [sub_resource type="Shader" id="Shader_fxvh0"]
 code = "shader_type spatial;
@@ -134,27 +137,8 @@ radial_segments = 10
 rings = 4
 is_hemisphere = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_skl3i"]
-render_priority = 0
-shader = SubResource("Shader_fxvh0")
-shader_parameter/albedo = Color(0.996404, 0.757149, 0.607415, 1)
-shader_parameter/clamp_diffuse_to_max = true
-shader_parameter/cuts = 3
-shader_parameter/wrap = 0.0
-shader_parameter/steepness = 1.0
-shader_parameter/use_attenuation = true
-shader_parameter/use_specular = true
-shader_parameter/specular_strength = 1.0
-shader_parameter/specular_shininess = 16.0
-shader_parameter/use_rim = false
-shader_parameter/rim_width = 8.0
-shader_parameter/rim_color = Color(1, 1, 1, 1)
-shader_parameter/use_ramp = false
-shader_parameter/use_borders = false
-shader_parameter/border_width = 0.01
-
 [sub_resource type="SphereMesh" id="SphereMesh_d6qte"]
-material = SubResource("ShaderMaterial_skl3i")
+material = ExtResource("1_1gqst")
 radius = 0.18
 height = 0.4
 radial_segments = 10
@@ -185,47 +169,45 @@ radial_segments = 10
 rings = 4
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vhhkw"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("2_yse8b")
 radius = 0.15
 height = 0.82
 
 [sub_resource type="BoxMesh" id="BoxMesh_rtatt"]
-material = ExtResource("1_i8ysb")
-size = Vector3(0.5, 0.45, 0.25)
+material = ExtResource("2_yse8b")
+size = Vector3(0.5, 0.45, 0.3)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_bue4w"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("2_yse8b")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 0.2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_l6q2j"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("1_1gqst")
 radius = 0.07
 height = 0.7
 radial_segments = 4
 rings = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_l5jc6"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("4_f2hcx")
 radius = 0.15
 height = 0.55
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vfcfl"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("4_f2hcx")
 radius = 0.1
 height = 0.7
 radial_segments = 4
 rings = 1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8jisf"]
-
 [sub_resource type="BoxMesh" id="BoxMesh_71xm0"]
-material = SubResource("StandardMaterial3D_8jisf")
+material = ExtResource("1_i8ysb")
 size = Vector3(0.2, 0.1, 0.3)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_rkrip"]
-material = ExtResource("1_i8ysb")
+material = ExtResource("1_1gqst")
 radius = 0.07
 height = 0.3
 radial_segments = 4
@@ -250,6 +232,7 @@ skeleton = NodePath("../..")
 
 [node name="Eye" type="MeshInstance3D" parent="Skeleton3D/Head"]
 transform = Transform3D(0.89431, 0, -0.447447, 0, 1, 0, 0.447447, 0, 0.89431, 0.0823706, 0.665, -0.122089)
+visible = false
 mesh = SubResource("SphereMesh_tdkst")
 skeleton = NodePath("../..")
 
@@ -260,6 +243,7 @@ skeleton = NodePath("../../..")
 
 [node name="Eye2" type="MeshInstance3D" parent="Skeleton3D/Head"]
 transform = Transform3D(0.911819, 0, 0.410592, 0, 1, 0, -0.410592, 0, 0.911819, -0.0864298, 0.665, -0.122089)
+visible = false
 mesh = SubResource("SphereMesh_tdkst")
 skeleton = NodePath("../..")
 
@@ -270,6 +254,7 @@ skeleton = NodePath("../../..")
 
 [node name="Nose" type="MeshInstance3D" parent="Skeleton3D/Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00114441, 0.619713, -0.173973)
+visible = false
 mesh = SubResource("SphereMesh_68u1s")
 skeleton = NodePath("../../..")
 
@@ -281,7 +266,7 @@ mesh = SubResource("CapsuleMesh_vhhkw")
 skeleton = NodePath("../..")
 
 [node name="Abdomen" type="MeshInstance3D" parent="Skeleton3D/Shirt"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0131025, -0.0114803)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00146484, 0.0204058, 0.00412944)
 mesh = SubResource("BoxMesh_rtatt")
 skeleton = NodePath("../..")
 
@@ -325,6 +310,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000197172, -0.295348, -0.0
 mesh = SubResource("BoxMesh_71xm0")
 skeleton = NodePath("../..")
 
-[node name="Left Arm2" type="MeshInstance3D" parent="Skeleton3D"]
+[node name="Neck" type="MeshInstance3D" parent="Skeleton3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00538944, 0.45002, 0)
 mesh = SubResource("CapsuleMesh_rkrip")

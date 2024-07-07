@@ -33,9 +33,11 @@ mesh = SubResource("CylinderMesh_i251c")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.9928, 0)
+visible = false
 light_color = Color(0.890152, 0.962436, 0.853779, 1)
 light_energy = 5.5
 shadow_enabled = true
+shadow_opacity = 0.6
 omni_range = 8.833
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]

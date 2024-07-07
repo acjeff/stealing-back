@@ -108,9 +108,9 @@ void light() {
 [resource]
 render_priority = 0
 shader = SubResource("Shader_fxvh0")
-shader_parameter/albedo = Color(1, 1, 1, 1)
-shader_parameter/clamp_diffuse_to_max = false
-shader_parameter/cuts = 1
+shader_parameter/albedo = Color(0.996404, 0.757149, 0.607415, 1)
+shader_parameter/clamp_diffuse_to_max = true
+shader_parameter/cuts = 3
 shader_parameter/wrap = 0.0
 shader_parameter/steepness = 1.0
 shader_parameter/use_attenuation = true
@@ -121,5 +121,5 @@ shader_parameter/use_rim = false
 shader_parameter/rim_width = 8.0
 shader_parameter/rim_color = Color(1, 1, 1, 1)
 shader_parameter/use_ramp = false
-shader_parameter/use_borders = true
-shader_parameter/border_width = 0.05
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
