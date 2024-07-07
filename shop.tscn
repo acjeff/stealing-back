@@ -150,8 +150,8 @@ use_collision = true
 metadata/floor_index = 1
 
 [node name="CSGBox3D" type="CSGBox3D" parent="TransWalls/FirstFloor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.71005, 0)
-size = Vector3(20, 0.4, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.71005, 3.55054)
+size = Vector3(20, 0.4, 27.1011)
 material = ExtResource("3_r0c80")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="TransWalls/FirstFloor"]

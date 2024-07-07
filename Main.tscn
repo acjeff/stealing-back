@@ -51,9 +51,7 @@ script = ExtResource("1_l2ko3")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.954288, -0.287605, 0.0813485, -0.0968865, 0.555135, 0.826098, -0.282749, 0.780454, -0.557624, -343.713, 129.32, 54.5986)
-visible = false
 light_color = Color(0.998892, 0.990796, 0.972349, 1)
-light_energy = 0.787
 light_bake_mode = 1
 shadow_enabled = true
 
@@ -302,7 +300,7 @@ npc_manager_path = NodePath("../../../NPCManager")
 [node name="Camera3D" parent="Player" index="1"]
 transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 1.6, 2.156)
 environment = ExtResource("1_lxhjq")
-fov = 85.5
+fov = 63.0
 size = 13.749
 script = ExtResource("7_hun0x")
 transparent_material = ExtResource("8_vpk5c")
@@ -318,6 +316,7 @@ target_item_id = 1
 return_threshold = 10.0
 
 [node name="Lamps" type="Node3D" parent="."]
+visible = false
 
 [node name="Lamp" parent="Lamps" instance=ExtResource("13_a3v5k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.6315, 30.9595, -4.31116)
