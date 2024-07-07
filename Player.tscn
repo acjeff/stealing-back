@@ -24,7 +24,7 @@ transform = Transform3D(1, 0, 0, 0, 0.901077, 0.433659, 0, -0.433659, 0.901077, 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_8y3b0")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
+[node name="Torch" type="SpotLight3D" parent="."]
 visible = false
 light_energy = 8.825
 spot_range = 13.309

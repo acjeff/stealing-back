@@ -1,7 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://m78y3erdr8b0"]
-
-[sub_resource type="Shader" id="Shader_fxvh0"]
-code = "shader_type spatial;
+shader_type spatial;
 
 //render_mode ambient_light_disabled;
 
@@ -103,23 +100,3 @@ void light() {
 		SPECULAR_LIGHT += rim_light * rim_color.rgb * rim_color.a * LIGHT_COLOR / PI; //Changed DIFFUSE_LIGHT to SPECULAR_LIGHT while migrating for similar result
 	}
 }
-"
-
-[resource]
-render_priority = 0
-shader = SubResource("Shader_fxvh0")
-shader_parameter/albedo = Color(1, 1, 1, 1)
-shader_parameter/clamp_diffuse_to_max = false
-shader_parameter/cuts = 1
-shader_parameter/wrap = 0.0
-shader_parameter/steepness = 1.0
-shader_parameter/use_attenuation = true
-shader_parameter/use_specular = true
-shader_parameter/specular_strength = 1.0
-shader_parameter/specular_shininess = 16.0
-shader_parameter/use_rim = false
-shader_parameter/rim_width = 8.0
-shader_parameter/rim_color = Color(1, 1, 1, 1)
-shader_parameter/use_ramp = false
-shader_parameter/use_borders = true
-shader_parameter/border_width = 0.05

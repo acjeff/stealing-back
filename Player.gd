@@ -101,8 +101,11 @@ func _input(event):
 			if nearby_item.is_in_group("Item"):
 				pick_up(nearby_item)
 
+		if Input.is_action_just_pressed("torch"):
+			$Torch.visible = !$Torch.visible
+
 		if Input.is_action_just_pressed("togglePhone"):
-			$"../../../Phone".visible = !$"../../../Phone".visible
+			$"../Phone".visible = !$"../Phone".visible
 
 		if Input.is_action_just_pressed("interact") and nearby_item:
 			if nearby_item.has_method("_on_interact"):

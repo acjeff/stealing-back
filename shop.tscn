@@ -123,6 +123,7 @@ shape = SubResource("ConcavePolygonShape3D_rw86r")
 
 [node name="Ground floor Light" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 4.11584, 0)
+visible = false
 light_energy = 10.0
 spot_range = 95.977
 spot_angle = 87.85
@@ -215,6 +216,7 @@ size = Vector3(8, 1, 4)
 
 [node name="First Floor Light" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8.8724, 0)
+visible = false
 light_energy = 10.0
 spot_range = 95.977
 spot_angle = 87.85
