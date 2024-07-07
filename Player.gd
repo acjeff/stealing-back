@@ -102,7 +102,7 @@ func _input(event):
 				pick_up(nearby_item)
 
 		if Input.is_action_just_pressed("togglePhone"):
-			$"../../../Phone".visible = !$"../../../Phone".visible
+			$"../Phone".visible = !$"../Phone".visible
 
 		if Input.is_action_just_pressed("interact") and nearby_item:
 			if nearby_item.has_method("_on_interact"):

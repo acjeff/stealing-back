@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://52abc5duhsw7"]
+
+[ext_resource type="Script" path="res://inventory_space.gd" id="1_fu1ji"]
+
+[node name="InventorySpace" type="Container"]
+script = ExtResource("1_fu1ji")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Panel"]
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 2
+offset_right = 1.0
+offset_bottom = 23.0

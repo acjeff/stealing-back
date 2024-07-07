@@ -13,30 +13,16 @@
 [ext_resource type="Material" uid="uid://dmbtgfx1ypk8f" path="res://transparent_material.tres" id="8_vpk5c"]
 [ext_resource type="PackedScene" uid="uid://b3ki4y0avaf2p" path="res://DialogueBox.tscn" id="9_u6f7j"]
 [ext_resource type="PackedScene" uid="uid://dfgpwypsfh05n" path="res://shop.tscn" id="11_c6y3w"]
-[ext_resource type="Shader" path="res://outline.gdshader" id="11_qoqhk"]
 [ext_resource type="PackedScene" uid="uid://cnqpcqmsqouvh" path="res://lamp.tscn" id="13_a3v5k"]
 [ext_resource type="Script" path="res://NPCManager.gd" id="14_dhql6"]
 [ext_resource type="Script" path="res://MissionUI.gd" id="16_oaa3n"]
 [ext_resource type="Theme" uid="uid://b7erl70yt47d" path="res://UI-Theme.tres" id="17_h4vm3"]
 
-[sub_resource type="NavigationMesh" id="NavigationMesh_aqc10"]
-agent_max_slope = 60.0
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_bqeo6"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lnqht"]
-render_priority = 0
-shader = ExtResource("11_qoqhk")
-shader_parameter/depth_threshold = 0.05
-shader_parameter/reverse_depth_threshold = 0.25
-shader_parameter/normal_threshold = 0.6
-shader_parameter/darken_amount = 0.3
-shader_parameter/lighten_amount = 1.5
-shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
-shader_parameter/light_direction = Vector3(-0.96, -0.18, 0.2)
-
-[sub_resource type="QuadMesh" id="QuadMesh_drrla"]
-material = SubResource("ShaderMaterial_lnqht")
-flip_faces = true
-size = Vector2(2, 2)
+[sub_resource type="World3D" id="World3D_ub6js"]
+environment = ExtResource("1_lxhjq")
+camera_attributes = SubResource("CameraAttributesPractical_bqeo6")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_74ro3"]
 
@@ -49,7 +35,14 @@ font_size = 31
 [sub_resource type="LabelSettings" id="LabelSettings_54der"]
 font_size = 21
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_aqc10"]
+agent_max_slope = 60.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ia1q0"]
+albedo_color = Color(0, 0, 0, 1)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_wtufn"]
+material = SubResource("StandardMaterial3D_ia1q0")
 size = Vector2(200, 25)
 
 [node name="Main" type="Node3D"]
@@ -58,7 +51,6 @@ script = ExtResource("1_l2ko3")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.954288, -0.287605, 0.0813485, -0.0968865, 0.555135, 0.826098, -0.282749, 0.780454, -0.557624, -343.713, 129.32, 54.5986)
-visible = false
 light_color = Color(0.998892, 0.990796, 0.972349, 1)
 light_energy = 0.787
 light_bake_mode = 1
@@ -68,6 +60,7 @@ shadow_enabled = true
 environment = ExtResource("1_lxhjq")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+visible = false
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,110 +68,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch = true
-stretch_shrink = 3
+stretch_shrink = 4
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+own_world_3d = true
+world_3d = SubResource("World3D_ub6js")
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(640, 360)
-render_target_update_mode = 4
-
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.8582, 31.192, 27.6165)
-navigation_mesh = SubResource("NavigationMesh_aqc10")
-
-[node name="Ground" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_4qwfp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8067, 31.1921, 2.76027)
-
-[node name="Player" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_w8oro")]
-transform = Transform3D(-0.0122172, 0, 0.999925, 0, 1, 0, -0.999925, 0, -0.0122172, 7.41363, 31.778, 22.5204)
-floor_stop_on_slope = false
-floor_max_angle = 1.0472
-interaction_radius = 10.0
-transparent_material = ExtResource("8_vpk5c")
-npc_manager_path = NodePath("../../../NPCManager")
-
-[node name="Camera3D" parent="SubViewportContainer/SubViewport/Player" index="1"]
-transform = Transform3D(1, 2.98023e-08, -8.9407e-08, 0, 0.896486, 0.443071, 8.9407e-08, -0.443071, 0.896487, 0, 20, 30)
-projection = 1
-fov = 37.8493
-size = 20.14
-script = ExtResource("7_hun0x")
-transparent_material = ExtResource("8_vpk5c")
-player_path = NodePath("..")
-
-[node name="PostProcessing" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Player/Camera3D" index="0"]
-transform = Transform3D(-0.330514, 0, 0.943801, 0.556084, 0.80799, 0.194738, -0.762582, 0.589196, -0.267052, -18.8044, -37.5508, -19.4118)
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_drrla")
-skeleton = NodePath("../../..")
-
-[node name="NPC" parent="SubViewportContainer/SubViewport" instance=ExtResource("8_sjtqr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.7646, 32.1943, 25.7195)
-npc_id = 1
-target_item_id = 1
-return_threshold = 10.0
-
-[node name="Lamps" type="Node3D" parent="SubViewportContainer/SubViewport"]
-
-[node name="Lamp" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.6315, 30.9595, -4.31116)
-
-[node name="Lamp2" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2526, 30.9595, -4.31116)
-
-[node name="Lamp3" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58287, 30.9595, -4.31116)
-
-[node name="Lamp4" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.2754, 30.9595, 28.0977)
-
-[node name="Lamp5" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.1002, 30.9595, 28.0977)
-
-[node name="Lamp6" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.9788, 30.9595, 28.0977)
-
-[node name="Lamp7" parent="SubViewportContainer/SubViewport/Lamps" instance=ExtResource("13_a3v5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.1199, 30.9595, -4.31116)
-
-[node name="Buildings" type="Node3D" parent="SubViewportContainer/SubViewport"]
-
-[node name="Shop" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
-
-[node name="Shop2" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -7.40722, 31.3967, 42.5829)
-
-[node name="Shop3" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.3375, 31.4399, -17.8735)
-
-[node name="Shop4" parent="SubViewportContainer/SubViewport/Buildings" instance=ExtResource("11_c6y3w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.37028, 31.3967, -17.7607)
-
-[node name="Items" type="Node3D" parent="SubViewportContainer/SubViewport"]
-
-[node name="Gold Watch" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5192, 33.1463, 25.6524)
-item_id = 1
-item_name = "Gold Watch"
-
-[node name="Banana" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1847, 32.1121, -14.5707)
-item_id = 2
-item_name = "Banana"
-
-[node name="Blueprints" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.48, 32.0769, -14.8534)
-item_id = 3
-item_name = "Blueprints"
-
-[node name="LargeItem" parent="SubViewportContainer/SubViewport/Items" groups=["interactable"] instance=ExtResource("4_hj7ko")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0617, 32.5732, -14.8765)
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(480, 270)
+render_target_update_mode = 0
 
 [node name="NPCManager" type="Node3D" parent="."]
 script = ExtResource("14_dhql6")
 
 [node name="Phone" type="Control" parent="."]
+visible = false
 material = SubResource("CanvasItemMaterial_74ro3")
 layout_mode = 3
 anchor_right = 1.003
@@ -377,9 +283,101 @@ offset_right = 16.4799
 
 [node name="PickupPromptUI" parent="." instance=ExtResource("6_7yc5l")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0308838, 9.09296)
-mesh = SubResource("PlaneMesh_wtufn")
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.8582, 31.192, 27.6165)
+navigation_mesh = SubResource("NavigationMesh_aqc10")
 
-[editable path="SubViewportContainer/SubViewport/Ground"]
-[editable path="SubViewportContainer/SubViewport/Player"]
+[node name="Ground" parent="." instance=ExtResource("1_4qwfp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8067, 31.1921, 2.76027)
+
+[node name="Player" parent="." instance=ExtResource("2_w8oro")]
+transform = Transform3D(-0.422476, 0, -0.906374, 0, 1, 0, 0.906374, 0, -0.422476, 7.41363, 32.3702, 22.5204)
+floor_stop_on_slope = false
+floor_max_angle = 1.0472
+interaction_radius = 10.0
+transparent_material = ExtResource("8_vpk5c")
+npc_manager_path = NodePath("../../../NPCManager")
+
+[node name="Camera3D" parent="Player" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 1.6, 2.156)
+keep_aspect = 0
+environment = ExtResource("1_lxhjq")
+fov = 94.5
+size = 13.749
+near = 0.636
+script = ExtResource("7_hun0x")
+transparent_material = ExtResource("8_vpk5c")
+player_path = NodePath("..")
+
+[node name="CollisionShape3D" parent="Player" index="4"]
+visible = false
+
+[node name="NPC" parent="." instance=ExtResource("8_sjtqr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.7646, 32.1943, 25.7195)
+npc_id = 1
+target_item_id = 1
+return_threshold = 10.0
+
+[node name="Lamps" type="Node3D" parent="."]
+
+[node name="Lamp" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.6315, 30.9595, -4.31116)
+
+[node name="Lamp2" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2526, 30.9595, -4.31116)
+
+[node name="Lamp3" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58287, 30.9595, -4.31116)
+
+[node name="Lamp4" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.2754, 30.9595, 28.0977)
+
+[node name="Lamp5" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.1002, 30.9595, 28.0977)
+
+[node name="Lamp6" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.9788, 30.9595, 28.0977)
+
+[node name="Lamp7" parent="Lamps" instance=ExtResource("13_a3v5k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.1199, 30.9595, -4.31116)
+
+[node name="Buildings" type="Node3D" parent="."]
+
+[node name="Shop" parent="Buildings" instance=ExtResource("11_c6y3w")]
+
+[node name="Shop2" parent="Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -7.40722, 31.3967, 42.5829)
+
+[node name="Shop3" parent="Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.3375, 31.4399, -17.8735)
+
+[node name="Shop4" parent="Buildings" instance=ExtResource("11_c6y3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.37028, 31.3967, -17.7607)
+
+[node name="Items" type="Node3D" parent="."]
+
+[node name="Gold Watch" parent="Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5192, 33.1463, 25.6524)
+item_id = 1
+item_name = "Gold Watch"
+
+[node name="Banana" parent="Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1847, 32.1121, -14.5707)
+item_id = 2
+item_name = "Banana"
+
+[node name="Blueprints" parent="Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.48, 32.0769, -14.8534)
+item_id = 3
+item_name = "Blueprints"
+
+[node name="LargeItem" parent="Items" groups=["interactable"] instance=ExtResource("4_hj7ko")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0617, 32.5732, -14.8765)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8067, 31.223, 11.8532)
+mesh = SubResource("PlaneMesh_wtufn")
+skeleton = NodePath("../../..")
+
+[editable path="Ground"]
+[editable path="Player"]

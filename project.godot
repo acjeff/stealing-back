@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Stealing Back (V2)"
+config/name="Stealing Back"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"

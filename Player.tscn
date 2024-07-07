@@ -7,6 +7,7 @@
 size = Vector3(2, 2, 2)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gnjxx"]
+height = 1.8
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -29,6 +30,7 @@ light_energy = 8.825
 spot_range = 13.309
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0428805, 0)
 shape = SubResource("CapsuleShape3D_gnjxx")
 
 [node name="Person" parent="." instance=ExtResource("2_a1uqr")]

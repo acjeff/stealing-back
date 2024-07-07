@@ -1,7 +1,7 @@
 # InventoryUI.gd
 extends CanvasLayer
 
-@onready var inventory_container = $VBoxContainer
+@onready var inventory_container = $Panel/GridContainer
 
 func update_inventory(inventory):
 	# Clear previous items
