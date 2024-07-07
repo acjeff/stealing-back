@@ -5,6 +5,8 @@ extends RigidBody3D
 @export var weight: float = 1.0
 @export var value: float = 10.0
 @export var item_name: String = "Default Item"
+@export var item_icon: String = ""
+@export var item_icon_color: String = "#fafafa"
 
 func _ready():
 	add_to_group("Item")

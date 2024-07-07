@@ -112,7 +112,7 @@ interaction_radius = 10.0
 npc_manager_path = NodePath("../../../NPCManager")
 
 [node name="Camera3D" parent="SubViewportContainer/SubViewport/Player" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 1.6, 2.156)
+transform = Transform3D(1, 0, 0, 0, 0.960294, 0.278991, 0, -0.278991, 0.960294, 0, 2, 2.156)
 fov = 92.1
 size = 13.749
 script = ExtResource("7_hun0x")
@@ -167,25 +167,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.3375, 31.4399, -17.8735)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.37028, 31.3967, -17.7607)
 
 [node name="Items" type="Node3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6134, 62.3842, 5.52054)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6134, 62.3842, 23.3666)
 
 [node name="Gold Watch" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5192, 33.1463, 25.6524)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.8864, 33.1463, 25.6524)
 item_id = 1
+value = 200.0
 item_name = "Gold Watch"
+item_icon = ""
 
-[node name="Banana" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1847, 32.1121, -14.5707)
+[node name="Gold Watch2" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5064, 36.9447, 25.6524)
+item_id = 1
+value = 200.0
+item_name = "Gold Watch"
+item_icon = ""
+
+[node name="Gold Watch3" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.0832, 33.1463, 25.6524)
+item_id = 1
+value = 200.0
+item_name = "Gold Watch"
+item_icon = ""
+
+[node name="Lemon" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0211, 32.1121, 23.0404)
 item_id = 2
-item_name = "Banana"
+value = 2.0
+item_name = "Lemon"
+item_icon = ""
 
 [node name="Blueprints" parent="SubViewportContainer/SubViewport/Items" instance=ExtResource("3_66udm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.48, 32.0769, -14.8534)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.0015, 37.6765, 20.8723)
 item_id = 3
+value = 1000.0
 item_name = "Blueprints"
+item_icon = ""
 
 [node name="LargeItem" parent="SubViewportContainer/SubViewport/Items" groups=["interactable"] instance=ExtResource("4_hj7ko")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0617, 32.5732, -14.8765)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0617, 32.5732, 17.6488)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4201, 93.6072, 17.3737)
@@ -389,6 +409,7 @@ offset_left = -12.56
 offset_right = 16.4799
 
 [node name="InventoryUI" parent="." instance=ExtResource("5_thrj7")]
+visible = false
 
 [node name="PickupPromptUI" parent="." instance=ExtResource("6_7yc5l")]
 

@@ -105,6 +105,9 @@ func _input(event):
 		if Input.is_action_just_pressed("torch"):
 			$Torch.visible = !$Torch.visible
 
+		if Input.is_action_just_pressed("inventory"):
+			$"../../../InventoryUI".visible = !$"../../../InventoryUI".visible
+
 		if Input.is_action_just_pressed("togglePhone"):
 			phone.visible = !phone.visible
 
@@ -152,11 +155,9 @@ func _on_body_exited(body):
 		stop_dragging()
 
 func pick_up(item):
-	var item_name = item.item_name  # Store item name before freeing
 	if item.weight + bag_weight <= bag_capacity:
 		inventory.append(item)  # Store the item instance
 		bag_weight += item.weight
-		print("Picked up item: ", item_name)
 		item.queue_free()  # Removes the item from the world
 		inventory_ui.update_inventory(inventory)  # Update the inventory UI
 		pickup_prompt_ui.hide_prompt()  # Hide the pickup prompt
